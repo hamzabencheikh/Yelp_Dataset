@@ -1,0 +1,369 @@
+Part 1: Yelp Dataset Profiling and Understanding
+1. Profile the data by finding the total number of records for each of
+the tables below:
+
+Answers:
+i. Attribute table = 10000
+ii. Business table = 10000
+iii. Category table = 10000
+iv. Checkin table = 10000
+v. elite_years table = 10000
+vi. friend table = 10000
+vii. hours table = 10000
+viii. photo table = 10000
+ix. review table = 10000
+x. tip table = 10000
+xi. user table = 10000
+
+
+2. Find the total distinct records by either the foreign key or
+primary key for each table. If two foreign keys are listed in the
+table, please specify which foreign key.
+i. Business (ID)= 10000
+ii. Hours (Business_id)=1562
+iii. Category(Business_id)=2643
+iv. Attribute(Business_id)= 1115
+v. Review (Id)=10000
+vi. Checkin (Business_id) = 493
+vii. Photo (id)=10000
+viii. Tip (user_id)=537
+ix. User (id)=10000
+x. Friend (user_id)=11
+xi. Elite_years (elite_years)=2780
+
+
+3. Are there any columns with null values in the Users table? Indicate
+"yes," or "no."
+
+Answer:No
+SQL code used to arrive at answer:
+SELECT COUNT(*)
+FROM user
+WHERE id IS NULL
+OR name IS NULL
+OR review_count IS NULL
+OR yelping_since IS NULL
+OR useful IS NULL
+OR funny IS NULL
+OR cool IS NULL
+OR fans IS NULL
+OR average_stars IS NULL
+OR compliment_hot IS NULL
+OR compliment_more IS NULL
+OR compliment_profile IS NULL
+OR compliment_cute IS NULL
+OR compliment_list IS NULL
+OR compliment_note IS NULL
+OR compliment_plain IS NULL
+OR compliment_cool IS NULL
+OR compliment_funny IS NULL
+OR compliment_writer IS NULL
+OR compliment_photos IS NULL
+
+4. For each table and column listed below, display the smallest
+(minimum), largest (maximum), and average (mean) value for the
+following fields:
+i. Table: Review, Column: Stars
+min:1 max:5 avg:3.7082
+ii. Table: Business, Column: Stars
+min:1.0 max:5.0 avg:3.6549
+iii. Table: Tip, Column: Likes
+min:0 max:2 avg:0.0144
+iv. Table: Checkin, Column: Count
+min:1 max:53 avg:1.9414
+v. Table: User, Column: Review_count
+min:0 max:2000 avg:24.2995
+
+5. List the cities with the most reviews in descending order:
+SQL code used to arrive at answer:
+Select
+City,
+SUM(Review_count) as Sum_Review
+From Business
+Group by City
+Order by Sum_Review DESC
+Copy and Paste the Result Below:
++-------------------+
+| city | Sum_Review |
++-------------------+
+| Las Vegas | 82854 |
+| Phoenix | 34503 |
+| Toronto | 24113 |
+| Scottsdale | 20614 |
+| Charlotte | 12523 |
+| Henderson | 10871 |
+| Tempe | 10504 |
+| Pittsburgh | 9798 |
+| Montréal | 9448 |
+| Chandler | 8112 |
+| Mesa | 6875 |
+| Gilbert | 6380 |
+| Cleveland | 5593 |
+| Madison | 5265 |
+| Glendale | 4406 |
+| Mississauga | 3814 |
+| Edinburgh | 2792 |
+| Peoria | 2624 |
+| North Las Vegas | 2438 |
+| Markham | 2352 |
+| Champaign | 2029 |
+| Stuttgart | 1849 |
+| Surprise | 1520 |
+| Lakewood | 1465 |
+| Goodyear | 1155 |
++-----------------+
+
+
+6. Find the distribution of star ratings to the business in the
+following cities:
+i. Avon
+SQL code used to arrive at answer:
+Select
+SUM(review_count) as Sum_review,stars
+From Business
+Where city="Avon"
+Group by stars
+Copy and Paste the Resulting Table Below (2 columns â€“ star rating
+and count):
++------------+-------+
+| Sum_review | stars |
++------------+-------+
+| 10 | 1.5 |
+| 6 | 2.5 |
+| 88 | 3.5 |
+| 21 | 4.0 |
+| 31 | 4.5 |
+| 3 | 5.0 |
++------------+-------+
+ii. Beachwood
+SQL code used to arrive at answer:
+Select
+SUM(review_count) as Sum_review,stars
+From Business
+Where city="Beachwood"
+Group by stars
+Copy and Paste the Resulting Table Below (2 columns â€“ star rating
+and count):
++------------+-------+
+| Sum_review | stars |
++------------+-------+
+| 8 | 2.0 |
+| 3 | 2.5 |
+| 11 | 3.0 |
+| 6 | 3.5 |
+| 69 | 4.0 |
+| 17 | 4.5 |
+| 23 | 5.0 |
++------------+-------+
+
+
+7. Find the top 3 users based on their total number of reviews:
+SQL code used to arrive at answer:
+SELECT id,
+name,
+review_count
+FROM user
+ORDER BY review_count DESC
+LIMIT 3
+Copy and Paste the Result Below:
++--------+--------------+
+| name | review_count |
++--------+--------------+
+| Gerald | 2000 |
+| Sara | 1629 |
+| Yuri | 1339 |
++--------+--------------+
+
+
+8. Does posing more reviews correlate with more fans?
+Please explain your findings and interpretation of the results:
+Answer:
+There is not a direct relation between those variables, because Amy,
+for instance, has the higher number of fans but Mimi has more reviews.
+Code
+Select
+name,
+fans,
+review_count
+From user
+Order by fans DESC
++------+------+--------------+
+| name | fans | review_count |
++------+------+--------------+
+| Amy | 503 | 609 |
+| Mimi | 497 | 968 |
+| Harald | 311 | 1153 |
+| Gerald | 253 | 2000 |
+| Christine | 173 | 930 |
+| Lisa | 159 | 813 |
+| Cat | 133 | 377 |
+| William | 126 | 1215 |
++---------+-----+------+
+
+9. Are there more reviews with the word "love" or with the word "hate"
+in them?
+Answer:
+Yes. There are 1780 reviews with the word “love” and 232 with the word
+“hate”
+SQL code used to arrive at answer:
+Select Count (*)
+From review
+Where text LIKE '%love%'
+10. Find the top 10 users with the most fans:
+SQL code used to arrive at answer:
+Select
+name,
+SUM(fans) as sum_fans
+From user
+Group by name
+Order by sum_fans DESC
+Limit 10
+Copy and Paste the Result Below:
++-----------+----------+
+| name | sum_fans |
++-----------+----------+
+| Amy | 519 |
+| Mimi | 498 |
+| Harald | 311 |
+| Gerald | 256 |
+| Lisa | 207 |
+| Nicole | 200 |
+| Christine | 187 |
+| Mark | 156 |
+| Jen | 148 |
+| Linda | 148 |
++-----------+----------+
+Part 2: Inferences and Analysis
+1. Pick one city and category of your choice and group the businesses
+in that city or category by their overall star rating. Compare the
+businesses with 2-3 stars to the businesses with 4-5 stars and answer
+the following questions. Include your code.
+i. Do the two groups you chose to analyze have a different
+distribution of hours?
+Yes, but there is not a tend depending of the star rating. For
+instance, those businesses with 2 stars opens at 11:00 and close at
+23:00, while those with 3.0 closes at 4:00. The group with 4-5 stars
+closes at the same time.
++---------+-------+-------------+----------------------+
+| city | stars | category | hours |
++---------+-------+-------------+----------------------+
+| Toronto | 2.0 | Restaurants | Saturday|11:00-23:00 |
+| Toronto | 3.0 | Restaurants | Saturday|10:00-4:00 |
+| Toronto | 4.0 | Restaurants | Saturday|18:00-23:00 |
+| Toronto | 4.5 | Restaurants | Saturday|11:00-23:00 |
++---------+-------+-------------+----------------------+
+ii. Do the two groups you chose to analyze have a different number of
+reviews?
+
+Yes, the group with 4-5 stars has more reviews (by little)
++---------+-------+---------------------+-------------+----------------------+
+| city | stars | SUM(b.review_count) | category | hours |
++---------+-------+---------------------+-------------+----------------------+
+| Toronto | 2.0 | 35 | Restaurants | Saturday|11:00-23:00 |
+| Toronto | 3.0 | 567 | Restaurants | Saturday|10:00-4:00 |
+| Toronto | 4.0 | 445 | Restaurants | Saturday|18:00-23:00 |
+| Toronto | 4.5 | 238 | Restaurants | Saturday|11:00-23:00 |
++---------+-------+---------------------+-------------+----------------------+
+iii. Are you able to infer anything from the location data provided
+between these two groups? Explain.
+No, they have different locations.
++---------+-------+-----------------------+---------------------+-------------
++----------------------+
+| city | stars | address | SUM(b.review_count) | category| hours |
++---------+-------+-----------------------+---------------------+-------------
++----------------------+
+| Toronto | 2.0 | 389 Church Street | 35 | Restaurants
+| Saturday|11:00-23:00 |
+| Toronto | 3.0 | 270 Adelaide Street W | 567 | Restaurants
+| Saturday|10:00-4:00 |
+| Toronto | 4.0 | 169 Niagara Street | 445 | Restaurants
+| Saturday|18:00-23:00 |
+| Toronto | 4.5 | 5084 Dundas Street W | 238 | Restaurants
+| Saturday|11:00-23:00 |
++---------+-------+-----------------------+---------------------+-------------
++----------------------+
+
+SQL code used for analysis:
+Select
+b.city,
+b.stars,
+b.address,
+SUM(b.review_count),
+c.category,
+h.hours
+From Business b
+INNER JOIN Category C
+ON (b.id=c.business_id)
+INNER JOIN Hours h
+ON (c.business_id=h.business_id)
+Where b.City="Toronto" AND c.category ="Restaurants"
+Group by b.stars
+
+2. Group business based on the ones that are open and the ones that
+are closed. What differences can you find between the ones that are
+still open and the ones that are closed? List at least two differences
+and the SQL code you used to arrive at your answer.
+i. Difference 1:
+The businesses that are still open has on average a bit higher stars
+rating than those that are not open
+
+ii. Difference 2:
+
+The businesses that are still open has way more reviews in total than
+those that are not open
++-------------------+---------------+---------+
+| SUM(review_count) | AVG(stars) | is_open |
++-------------------+---------------+---------+
+| 35261 | 3.52039473684 | 0 |
+| 269300 | 3.67900943396 | 1 |
++-------------------+---------------+---------+
+SQL code used for analysis:
+Select
+name,
+SUM(review_count),
+AVG(stars),
+is_open
+From business
+Group by is_open
+
+3. For this last part of your analysis, you are going to choose the
+type of analysis you want to conduct on the Yelp dataset and are going
+to prepare the data for analysis.
+Ideas for analysis include: Parsing out keywords and business
+attributes for sentiment analysis, clustering businesses to find
+commonalities or anomalies between them, predicting the overall star
+rating for a business, predicting the number of fans a user will have,
+and so on. These are just a few examples to get you started, so feel
+free to be creative and come up with your own problem you want to
+solve. Provide answers, in-line, to all of the following:
+i. Indicate the type of analysis you chose to do:
+Get to know the relationship between the reviews count, the stars and
+the top 10 categories with the highest number of businesses on each so
+that Yelp might be able to identify which category should they be
+putting more effort, or try to get more clients in those categories
+with lowest number of businesses but high stars average or reviews.
+
+ii. Write 1-2 brief paragraphs on the type of data you will need for
+your analysis and why you chose that data:
+
+For this analysis I will need first at all the category of each
+business, in this case I will filter the top 10 categories with the
+highest number of businesses.
+I might also need the reviews that each category has in terms of
+counting and also the average of the stars given for the users to the
+category, so that I would be able to determinate and predict the
+preferences of Yelps users and a contribution to the information they
+might need in order to improve their service.
+iii. Output of your finished dataset:
+
+
+iv. Provide the SQL code you used to create your final dataset:
+Select 
+c.category,
+b.review_count,
+Count(b.name) as number_of_businesses,
+AVG(b.stars) as stars_category
+FROM Category c INNER JOIN Business b ON c.business_id=b.id
+Group by c.category
+Order by number_of_businesses DESC
+Limit 10
